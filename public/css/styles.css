@@ -1,3 +1,6 @@
+body{
+  font-size: 20px;
+}
 .container-fluid {
     padding-top: 70px;
     padding-bottom: 70px;
@@ -20,7 +23,7 @@
 }
 
 .footer {
-	position: absolute;
+	position: fixed;
 	text-align: center;
 	bottom: 0;
 	width: 100%;
@@ -32,4 +35,15 @@
 	margin-top: 25px;
 	font-size: 12px;
   color: #fff;
+}
+
+.author{
+  font-size: 15px;
+  text-align: right;
+}
+.dash{
+  font-size: 15px;
+}
+.day{
+  font-size:15px;
 }

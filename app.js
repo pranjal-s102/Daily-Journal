@@ -13,7 +13,9 @@ const postSchema={
       unique:true,
       dropDups:true
     },
-    content:String
+    content:String,
+    author:String,
+    dateSince:Date
 };
 const Post = mongoose.model("Post",postSchema);
 
@@ -35,7 +37,8 @@ const contactContent = "Scelerisque eleifend donec pretium vulputate sapien. Rho
 
 app.get("/",function(req,res){
   Post.find({},function(err,posts){
-    res.render("home",{bodyText:homeStartingContent,
+    res.render("home",{
+    bodyText:homeStartingContent,
     posts:posts
   });
 });
@@ -56,13 +59,17 @@ app.get("/compose",function(req,res){
 
 app.post("/compose",function(req,res)
 {
-  let titleArea=req.body.composeTitle;
+  let titleArea=_.capitalize(req.body.composeTitle);
   let textArea=req.body.composeText;
+  let titleAuthor=req.body.composingAuthor;
+  const date=new Date();
   const post = new Post({
-    title:_.capitalize(titleArea),
-    content:textArea
+    title:titleArea,
+    content:textArea,
+    author:titleAuthor,
+    dateSince:date
   });
-
+console.log(titleAuthor);
   post.save(function(err){
     if(!err)
     {
@@ -80,13 +87,21 @@ app.post("/compose",function(req,res)
 
 
 app.get("/posts/:postName",function(req,res){
-  let y=_.lowerCase(req.params.postName);//takes care of the kababcase or lower upper case issues
-  const requestedPostId = req.params.postName;
+  //takes care of the kababcase or lower upper case issues
+  const requestedPostId = _.capitalize(req.params.postName);
+  //const requestedPostId = _.capitalize(req.params.postName);
+  const date=new Date();
+  console.log(requestedPostId);
   Post.findOne({title:requestedPostId},function(err,post){
-    console.log("Found");
+    //console.log("Found"+post.dateSince);
+    const months = ["Jan", "Feb", "Mar", "April", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
+    const d = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+let day=d[post.dateSince.getDay()]+" "+months[post.dateSince.getDate()]+" "+post.dateSince.getDay()+", "+post.dateSince.getFullYear()+" | "+post.dateSince.getHours()+":"+post.dateSince.getMinutes();
     res.render("post",{
       title:post.title,
-      bodyText: post.content
+      bodyText: post.content,
+      author:post.author,
+      dateSince:day
     });
   });
 });
