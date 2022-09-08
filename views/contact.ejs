@@ -1,6 +1,6 @@
 <%-include("partials\\header");%>
     <h1>Contact Us</h1>
-    <p><%= bodyText %></p>
+    <p><%- bodyText %></p>
     <form action="/contactus" method="post">
       <div class="form-group">
         <label for="user">Your Name</label>
@@ -15,7 +15,7 @@
         <input type="text" name="mailSubject" class="form-control" placeholder="Mail subject"></input>
       </div>
       <div class="form-group">
-        <label for="mailContent">Say hi to dev!</label>
+        <label for="mailContent">Say something!</label>
         <textarea name="mailContent" class="form-control" rows="8" cols="80"></textarea>
       </div>
         <button class="btn btn-primary" type="submit" name="button">Send Mail</button>
