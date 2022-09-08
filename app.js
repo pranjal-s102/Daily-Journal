@@ -1,12 +1,13 @@
+require('dotenv').config();//eNVIROMENT variables
 const express=require("express");
 const app=express();
 const _ =require("lodash");
 const ejs = require("ejs");
 const bodyParser=require("body-parser");
-const port=process.env.PORT||3000;
+const port=process.env.PORT||3000||3001;
 const mongoose=require("mongoose");
-//const popup = require('popups');
 const alert = require('alert');
+const nodemailer = require("nodemailer");
 const postSchema={
     title:{
       type:String,
@@ -85,6 +86,9 @@ console.log(titleAuthor);
   //posts.push(post);
 });
 
+app.get("/posts",function(req,res){
+  res.redirect("/");
+})
 
 app.get("/posts/:postName",function(req,res){
   //takes care of the kababcase or lower upper case issues
@@ -96,7 +100,7 @@ app.get("/posts/:postName",function(req,res){
     //console.log("Found"+post.dateSince);
     const months = ["Jan", "Feb", "Mar", "April", "May", "Jun", "July", "Aug", "Sept", "Oct", "Nov", "Dec"];
     const d = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-let day=d[post.dateSince.getDay()]+" "+months[post.dateSince.getDate()]+" "+post.dateSince.getDay()+", "+post.dateSince.getFullYear()+" | "+post.dateSince.getHours()+":"+post.dateSince.getMinutes();
+let day=d[post.dateSince.getDay()]+" "+months[post.dateSince.getMonth()]+" "+post.dateSince.getDate()+", "+post.dateSince.getFullYear()+" | "+post.dateSince.getHours()+":"+post.dateSince.getMinutes();
     res.render("post",{
       title:post.title,
       bodyText: post.content,
@@ -106,6 +110,37 @@ let day=d[post.dateSince.getDay()]+" "+months[post.dateSince.getDate()]+" "+post
   });
 });
 
+
+app.post("/contactus",function(req,res){
+  const name=req.body.user;
+  const mail=req.body.userID;
+  const message=req.body.mailContent;
+  const subject=req.body.mailSubject;
+
+  var transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: process.env.MAIL,
+    pass: process.env.PASSWORD
+  }
+});
+
+var mailOptions = {
+  from: process.env.MAIL,
+  to: process.env.RECEIVER,
+  subject: "From "+name+" "+mail+" regarding "+subject,
+  text: message
+};
+
+transporter.sendMail(mailOptions, function(error, info){
+  if (error) {
+    console.log(error);
+  } else {
+    console.log('Email sent: ' + info.response);
+  }
+});
+res.redirect("/");
+});
 
 app.listen(port,function(){
   console.log("Listening at port "+port);

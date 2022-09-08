@@ -8,12 +8,11 @@
   <a href="/posts/<%=post.title%>">Read More</a></p>
   <p class="author"><span class="dash">-</span><%= post.author %>
     <%var date=new Date();%>
-<%  var days=Math.floor((date-post.dateSince)/(1000 * 3600 * 24));%>
+<%  var days=Math.floor((date.getTime()-post.dateSince.getTime())/(1000 * 3600 * 24));%>
   <%var day=days+" days ago";%>
-  <%if(days==0)%>
-  <%{%>
-    <%day="Today"%>
-  <%}%>
+  <%if(days==0){day="Today";}else if(days==1){day="Yesterday";}%>
   <br><%=  day %></p>
   <% }) %>
+
+
 <%-include("partials\\footer");%>
