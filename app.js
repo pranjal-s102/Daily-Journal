@@ -24,7 +24,8 @@ const Post = mongoose.model("Post",postSchema);
 app.use(bodyParser.urlencoded({extended:true}))
 app.set('view engine','ejs');
 app.use(express.static("public"));
-mongoose.connect("mongodb://localhost:27017/blogDB", {useNewUrlParser: true});
+//mongoose.connect("mongodb://localhost:27017/blogDB", {useNewUrlParser: true});
+mongoose.connect(process.env.DBLINK,{useNewUrlParser:true});
 app.use(express.static(__dirname + '\\public'));
 
 
